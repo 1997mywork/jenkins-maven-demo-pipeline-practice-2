@@ -7,6 +7,9 @@ on:
 
   workflow_dispatch:
 
+env:
+  APP_ENV: Development
+
 jobs:
 
   build:
@@ -15,26 +18,39 @@ jobs:
 
     steps:
 
-      - name: Checkout Code
-        uses: actions/checkout@v4
+    - name: Checkout
+      uses: actions/checkout@v4
 
-      - name: Setup Java
-        uses: actions/setup-java@v4
-        with:
-          distribution: 'temurin'
-          java-version: '21'
+    - name: Setup Java
+      uses: actions/setup-java@v4
+      with:
+        distribution: 'temurin'
+        java-version: '21'
 
-      - name: Build
-        run: mvn clean compile
+    - name: Build
+      run: mvn clean compile
 
-      - name: Test
-        run: mvn test
+  test:
 
-      - name: Package
-        run: mvn package
+    needs: build
 
-      - name: Upload Artifact
-        uses: actions/upload-artifact@v4
-        with:
-          name: java-jar
-          path: target/*.jar
+    runs-on: ubuntu-latest
+
+    steps:
+
+    - name: Checkout
+      uses: actions/checkout@v4
+
+    - name: Test
+      run: mvn test
+
+  deploy:
+
+    needs: test
+
+    runs-on: ubuntu-latest
+
+    steps:
+
+    - name: Deployment message
+      run: echo "Deploying application to $APP_ENV"
