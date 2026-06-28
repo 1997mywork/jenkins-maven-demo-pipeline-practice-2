@@ -7,8 +7,6 @@ on:
 
   workflow_dispatch:
 
-env:
-  APP_ENV: Development
 
 jobs:
 
@@ -60,5 +58,5 @@ jobs:
 
     steps:
 
-    - name: Deployment message
-      run: echo "Deploying application to $APP_ENV"
+    - name: Deployment simulation
+      run: echo "Deploying to ${{ secrets.DEPLOY_SERVER }}"
